@@ -183,28 +183,27 @@ namespace Library.Models
       JOIN authors ON (books_authors.author_id = authors.id)
       WHERE books.id = @BookId;";
 
-      MySqlParameter studentIdParameter = new MySqlParameter();
-      studentIdParameter.ParameterName = "@StudentId";
-      studentIdParameter.Value = _id;
-      cmd.Parameters.Add(studentIdParameter);
+      MySqlParameter bookIdParameter = new MySqlParameter();
+      bookIdParameter.ParameterName = "@BookId";
+      bookIdParameter.Value = _id;
+      cmd.Parameters.Add(bookIdParameter);
 
       MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
-      List<Author> courses = new List<Author>{};
+      List<Author> allAuthors = new List<Author>{};
 
       while(rdr.Read())
       {
-        int courseId = rdr.GetInt32(0);
-        string courseDescription = rdr.GetString(1);
-        string courseNumber = rdr.GetString(2);
-        Author newAuthor = new Author(courseDescription, courseNumber, courseId);
-        courses.Add(newAuthor);
+        int authorId = rdr.GetInt32(0);
+        string authorName = rdr.GetString(1);
+        Author newAuthor = new Author(authorName, authorId);
+        allAuthors.Add(newAuthor);
       }
       conn.Close();
       if (conn != null)
       {
         conn.Dispose();
       }
-      return courses;
+      return allAuthors;
     }
 
 

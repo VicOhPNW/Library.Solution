@@ -28,17 +28,27 @@ namespace Library.Controllers
         return RedirectToAction("Index");
       }
 
-      // [HttpGet("/books/{id}")]
-      // public ActionResult Details(int id)
-      // {
-      //   Dictionary<string, object> model = new Dictionary<string, object>();
-      //   Book selectedBook = Book.Find(id);
-      //   List<Author> bookAuthors = selectedBook.GetAuthors();
-      //   List<Author> allAuthors = Author.GetAll();
-      //   model.Add("selectedBook", selectedBook);
-      //   model.Add("bookAuthors", bookAuthors);
-      //   model.Add("allAuthors", allAuthors);
-      //   return View(model);
-      // }
+      [HttpGet("/books/{id}")]
+      public ActionResult Details(int id)
+      {
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        Book selectedBook = Book.Find(id);
+        List<Author> authorBooks = selectedBook.GetAuthors();
+        List<Author> allAuthors = Author.GetAll();
+        model.Add("selectedBook", selectedBook);
+        model.Add("authorBooks", authorBooks);
+        model.Add("allAuthors", allAuthors);
+        return View(model);
+      }
+
+
+      [HttpPost("/books/{bookId}/authors/new")]
+        public ActionResult AddAuthor(int bookId)
+        {
+          Book book = Book.Find(bookId);
+          Author author = Author.Find(Int32.Parse(Request.Form["author-id"]));
+          book.AddAuthor(author);
+          return RedirectToAction("Index");
+        }
     }
 }

@@ -6,12 +6,14 @@
 <div class = "container">
 <h1>Selected Book: </h1>
 <h2>Title: @Model["selectedBook"].GetTitle()</h2>
+<h2>Author name: @Model["selectedBook"].GetAuthors()</h2>
+
 <hr />
-@if (@Model["selectedAuthors"].Count != 0)
+@if (@Model["authorBooks"].Count != 0)
 {
   <h4>Following authors cowrote this book:</h4>
   <ul>
-    @foreach (Author author in @Model["selectedAuthors"])
+    @foreach (Author author in @Model["authorBooks"])
     {
       <li>@author.GetName()</li>
     }

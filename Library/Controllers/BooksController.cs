@@ -4,9 +4,9 @@ using Library.Models;
 
 namespace Library.Controllers
 {
-    public class HomeController : Controller
+    public class BooksController : Controller
     {
-      [HttpGet("/")]
+      [HttpGet("/books")]
       public ActionResult Index()
       {
         Return View();

@@ -5,83 +5,110 @@ using Library;
 
 namespace Library.Models
 {
-    public class Book
+  public class Book
+  {
+    private int _id;
+    private string _title;
+    private string _author;
+    private int _copies;
+    private string _description;
+
+    public Book (string title, string author, int copies, string description, int id=0)
     {
-      private int _id;
-      private string _title;
-      private string _author;
-      private int _copies;
-      private string _description;
+      _id=id;
+      _title=title;
+      _author=author;
+      _copies=copies;
+      _description=description;
+    }
 
-      public Book (string title, string author, int copies, string description, int id=0)
+    public int GetId()
+    {
+      return _id;
+    }
+
+    public string GetTitle()
+    {
+      return _title;
+    }
+
+    public string GetAuthor()
+    {
+      return _author;
+    }
+
+    public int GetCopies()
+    {
+      return _copies;
+    }
+
+    public string GetDescription()
+    {
+      return _description;
+    }
+
+    public void Save()
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"INSERT INTO books (title, author, copies, description) VALUES (@title, @author, @copies, @description);";
+
+      MySqlParameter title = new MySqlParameter();
+      title.ParameterName = "@title";
+      title.Value = this._title;
+      cmd.Parameters.Add(title);
+
+      MySqlParameter author = new MySqlParameter();
+      author.ParameterName = "@author";
+      author.Value = this._author;
+      cmd.Parameters.Add(author);
+
+      MySqlParameter copies = new MySqlParameter();
+      copies.ParameterName = "@copies";
+      copies.Value = this._copies;
+      cmd.Parameters.Add(copies);
+
+      MySqlParameter description = new MySqlParameter();
+      description.ParameterName = "@description";
+      description.Value = this._description;
+      cmd.Parameters.Add(description);
+
+      cmd.ExecuteNonQuery();
+      _id = (int) cmd.LastInsertedId;
+      conn.Close();
+      if (conn != null)
       {
-        _id=id;
-        _title=title;
-        _author=author;
-        _copies=copies;
-        _description=description;
-      }
-
-      public int GetId()
-      {
-        return _id;
-      }
-
-      public string GetTitle()
-      {
-        return _title;
-      }
-
-      public string GetAuthor()
-      {
-        return _author;
-      }
-
-      public int GetCopies()
-      {
-        return _copies;
-      }
-
-      public string GetDescription()
-      {
-        return _description;
-      }
-
-      public void Save()
-      {
-        MySqlConnection conn = DB.Connection();
-        conn.Open();
-
-        var cmd = conn.CreateCommand() as MySqlCommand;
-        cmd.CommandText = @"INSERT INTO books (title, author, copies, description) VALUES (@title, @author, @copies, @description);";
-
-        MySqlParameter title = new MySqlParameter();
-        title.ParameterName = "@title";
-        title.Value = this._title;
-        cmd.Parameters.Add(title);
-
-        MySqlParameter author = new MySqlParameter();
-        author.ParameterName = "@author";
-        author.Value = this._author;
-        cmd.Parameters.Add(author);
-
-        MySqlParameter copies = new MySqlParameter();
-        copies.ParameterName = "@copies";
-        copies.Value = this._copies;
-        cmd.Parameters.Add(copies);
-
-        MySqlParameter description = new MySqlParameter();
-        description.ParameterName = "@description";
-        description.Value = this._description;
-        cmd.Parameters.Add(description);
-
-        cmd.ExecuteNonQuery();
-        _id = (int) cmd.LastInsertedId;
-        conn.Close();
-        if (conn != null)
-        {
-          conn.Dispose();
-        }
+        conn.Dispose();
       }
     }
+
+    public static List<Book> GetAll()
+    {
+      List<Book> allBooks = new List<Book>{};
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"SELECT * FROM books;";
+      var rdr = cmd.ExecuteReader() as MySqlDataReader;
+      while(rdr.Read())
+      {
+        int bookId = rdr.GetInt32(0);
+        string bookTitle = rdr.GetString(1);
+        string bookAuthor = rdr.GetString(2);
+        int bookCopies = rdr.GetInt32(3);
+        string bookDescription = rdr.GetString(4);
+
+        Book newBook = new Book(bookTitle, bookAuthor, bookCopies, bookDescription, bookId);
+        allBooks.Add(newBook);
+      }
+      conn.Close();
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
+      return allBooks;
+    }
+  }
 }

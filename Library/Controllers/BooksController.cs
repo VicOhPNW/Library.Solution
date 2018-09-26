@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Library.Models;
+using System;
 
 namespace Library.Controllers
 {
@@ -9,7 +10,22 @@ namespace Library.Controllers
       [HttpGet("/books")]
       public ActionResult Index()
       {
-        Return View();
+        List<Book> allBooks = Book.GetAll();
+        return View(allBooks);
+      }
+
+      [HttpGet("/books/new")]
+      public ActionResult CreateForm()
+      {
+        return View();
+      }
+
+      [HttpPost("/books")]
+      public ActionResult Create()
+      {
+        Book newBook = new Book(Request.Form["title"],Request.Form["author"], (Convert.ToInt32(Request.Form["copies"])),Request.Form["description"]);
+        newBook.Save();
+        return RedirectToAction("Index");
       }
     }
 }

@@ -1,0 +1,35 @@
+@{
+  Layout = "_Layout";
+}
+
+@using Library.Models;
+<div class = "container">
+<h1>Selected Book: </h1>
+<h2>Title: @Model["selectedBook"].GetTitle()</h2>
+<h2>Author name: @Model["selectedAuthor"].GetAuthor()</h2>
+<h2>Number of copies: @Model["bookCopies"].GetCopies()</h2>
+<h2>Genre: @Model["bookDescription"].GetDescription()</h2>
+<hr />
+@if (@Model["bookAuthors"].Count != 0)
+{
+  <h4>Following authors cowrote this book:</h4>
+  <ul>
+    @foreach (Author author in @Model["bookAuthors"])
+    {
+      <li>@author.GetName()</li>
+    }
+  </ul>
+}
+<h4>Add an author to this book:</h4>
+<form action='/books/@Model["selectedBook"].GetId()/authors/new' method='post'>
+  <label for='author-id'>Select a author</label>
+  <select id='author-id' name='author-id' type='text'>
+    @foreach (var author in @Model["allAuthors"])
+    {
+      <option value='@author.GetId()'>@author.GetName()</option>
+    }
+  </select>
+  <button type='submit' class = 'btn btn-danger' >Add author</button>
+</form>
+<a href = "/" class="btn btn-danger">Home</a>
+</div>

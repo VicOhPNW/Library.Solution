@@ -1,0 +1,25 @@
+@{
+  Layout = "_Layout";
+}
+<div class = "container">
+  <h1>Add a New Book</h1>
+  <form action = "/books" method = "post">
+    <label for = "title">Enter book's title:</label>
+    <input id="title" name="title" type="test">
+    <br>
+    <label for = "author">Enter book's author:</label>
+    <input id="author" name="author" type="text">
+    <br>
+    <label for = "copies">Enter number of copies:</label>
+    <input id="copies" name="copies" type="number">
+    <br>
+    <label for = "description">Enter book genre:</label>
+    <input id="description" name="description" type="text">
+    <br>
+
+    <button type="submit" class="btn btn-primary">Add a Book</button>
+  </form>
+  <br>
+  <a href = "/" class="btn btn-danger">Home</a>
+  <a href = "/books" class="btn btn-warning">Back to Book's list</a>
+</div>

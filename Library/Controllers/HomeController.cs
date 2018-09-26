@@ -9,7 +9,7 @@ namespace Library.Controllers
       [HttpGet("/")]
       public ActionResult Index()
       {
-        Return View();
+        return View();
       }
     }
 }

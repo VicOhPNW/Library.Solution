@@ -27,5 +27,18 @@ namespace Library.Controllers
         newBook.Save();
         return RedirectToAction("Index");
       }
+
+      // [HttpGet("/books/{id}")]
+      // public ActionResult Details(int id)
+      // {
+      //   Dictionary<string, object> model = new Dictionary<string, object>();
+      //   Book selectedBook = Book.Find(id);
+      //   List<Author> bookAuthors = selectedBook.GetAuthors();
+      //   List<Author> allAuthors = Author.GetAll();
+      //   model.Add("selectedBook", selectedBook);
+      //   model.Add("bookAuthors", bookAuthors);
+      //   model.Add("allAuthors", allAuthors);
+      //   return View(model);
+      // }
     }
 }

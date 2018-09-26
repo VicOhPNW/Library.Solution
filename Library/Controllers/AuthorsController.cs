@@ -9,7 +9,24 @@ namespace Library.Controllers
       [HttpGet("/authors")]
       public ActionResult Index()
       {
-        return View();
+        List<Author> allAuthors = Author.GetAll();
+        return View(allAuthors);
       }
+
+    [HttpGet("/authors/new")]
+    public ActionResult CreateForm()
+    {
+      return View();
+    }
+
+    [HttpPost("/authors")]
+    public ActionResult Create()
+    {
+      Author newAuthor = new Author(Request.Form["name"]);
+      newAuthor.Save();
+      return RedirectToAction("Index");
+    }
+
+
     }
 }

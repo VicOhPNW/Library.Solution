@@ -273,6 +273,50 @@ namespace Library.Models
       return allAuthors;
     }
 
+    public static Book GetBySearch(string SearchInput)
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"SELECT * FROM books WHERE books.title = @BookTitle OR books.author = @AuthorName;";
+
+      MySqlParameter bookTitleParameter = new MySqlParameter();
+      bookTitleParameter.ParameterName = "@BookTitle";
+      bookTitleParameter.Value = SearchInput;
+      cmd.Parameters.Add(bookTitleParameter);
+
+      MySqlParameter authorNameParameter = new MySqlParameter();
+      authorNameParameter.ParameterName = "@AuthorName";
+      authorNameParameter.Value = SearchInput;
+      cmd.Parameters.Add(authorNameParameter);
+
+      MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+
+      int bookId = 0;
+      string bookTitle = "";
+      string bookAuthor = "";
+      int bookCopies = 0;
+      string bookDescription = "";
+
+      while(rdr.Read())
+      {
+        bookId = rdr.GetInt32(0);
+        bookTitle = rdr.GetString(1);
+        bookAuthor = rdr.GetString(2);
+        bookCopies = rdr.GetInt32(3);
+        bookDescription = rdr.GetString(4);
+      }
+
+      Book newBook = new Book(bookTitle, bookAuthor, bookCopies, bookDescription, bookId);
+
+      conn.Close();
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
+      return newBook;
+
+    }
 
 
   }

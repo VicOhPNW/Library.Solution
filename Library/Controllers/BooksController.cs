@@ -74,15 +74,17 @@ namespace Library.Controllers
       return RedirectToAction("Index");
     }
 
-    [HttpPost("/books/search")]
+    [HttpPost("/books/found")]
     public ActionResult Search()
     {
-
-      List<Book> allBooksB
-
-      Book thisBook = Book.Find(bookId);
-      thisBook.Update(Request.Form["newTitle"], Request.Form["newAuthor"], (Convert.ToInt32(Request.Form["newCopies"])), Request.Form["newDescription"]);
-      return RedirectToAction("Index");
+      Book lookForBook = Book.GetBySearch(Request.Form["searchTitle"]);
+      // int foundId = lookForBook.GetId();
+      // Book foundBook = Book.Find(foundId);
+      Dictionary<string, object> model = new Dictionary<string, object>();
+      List<Author> authorBooks = lookForBook.GetAuthors();
+      model.Add("selectedBook", lookForBook);
+      model.Add("authorBooks", authorBooks);
+      return View("SearchDetail", model);
     }
 
   }

@@ -130,13 +130,15 @@ namespace Library.Models
         int bookCopies = 0;
         string bookDescription = "";
 
-        rdr.Read();
-        bookId = rdr.GetInt32(0);
-        bookTitle = rdr.GetString(1);
-        bookAuthor = rdr.GetString(2);
-        bookCopies = rdr.GetInt32(3);
-        bookDescription = rdr.GetString(4);
 
+        while(rdr.Read())
+        {
+          bookId = rdr.GetInt32(0);
+          bookTitle = rdr.GetString(1);
+          bookAuthor = rdr.GetString(2);
+          bookCopies = rdr.GetInt32(3);
+          bookDescription = rdr.GetString(4);
+        }
         Book newBook = new Book(bookTitle, bookAuthor, bookCopies, bookDescription, bookId);
         conn.Close();
         if (conn != null)
@@ -146,6 +148,71 @@ namespace Library.Models
 
       return newBook;
       }
+
+      public void Delete()
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+
+      MySqlCommand cmd = new MySqlCommand("DELETE FROM books WHERE id = @BookId; DELETE FROM books_authors WHERE book_id = @BookId;", conn);
+      MySqlParameter bookIdParameter = new MySqlParameter();
+      bookIdParameter.ParameterName = "@BookId";
+      bookIdParameter.Value = this.GetId();
+
+      cmd.Parameters.Add(bookIdParameter);
+      cmd.ExecuteNonQuery();
+
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
+      public void Update(string newTitle, string newAuthor, int newCopies, string newDescription)
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"UPDATE books SET title = @newTitle, author = @newAuthor,
+      copies = @newCopies, description = @newDescription WHERE id = @searchId;";
+
+      MySqlParameter searchId = new MySqlParameter();
+      searchId.ParameterName = "@searchId";
+      searchId.Value = _id;
+      cmd.Parameters.Add(searchId);
+
+      MySqlParameter title = new MySqlParameter();
+      title.ParameterName = "@newTitle";
+      title.Value = newTitle;
+      cmd.Parameters.Add(title);
+
+      MySqlParameter author = new MySqlParameter();
+      author.ParameterName = "@newAuthor";
+      author.Value = newAuthor;
+      cmd.Parameters.Add(author);
+
+      MySqlParameter copies = new MySqlParameter();
+      copies.ParameterName = "@newCopies";
+      copies.Value = newCopies;
+      cmd.Parameters.Add(copies);
+
+      MySqlParameter description = new MySqlParameter();
+      description.ParameterName = "@newDescription";
+      description.Value = newDescription;
+      cmd.Parameters.Add(description);
+
+      cmd.ExecuteNonQuery();
+      _title = newTitle;
+      _author = newAuthor;
+      _copies = newCopies;
+      _description = newDescription;
+
+      conn.Close();
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
+    }
 
 
         public void AddAuthor(Author newAuthor)

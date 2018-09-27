@@ -1,0 +1,21 @@
+@{
+  Layout = "_Layout";
+}
+
+<div class="container">
+<h1>Update the book @Model.GetTitle()</h1>
+<hr />
+
+<form action="/books/@Model.GetId()/update" method="post">
+    <label for="title">Title:</label>
+    <input type="text" name="newTitle" value="@Model.GetTitle()">
+    <label for="author">Author:</label>
+    <input type="text" name="newAuthor" value="@Model.GetAuthor()">
+    <label for="copies">Copies:</label>
+    <input type="number" name="newCopies" value="@Model.GetCopies()">
+    <label for="description">Description:</label>
+    <input type="text" name="newDescription" value="@Model.GetDescription()">
+    <button class = "btn btn-danger" type="submit">Update</button>
+</form>
+<h4><a href="/books">Go back</a></h4>
+</div>

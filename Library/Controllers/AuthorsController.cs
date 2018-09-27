@@ -4,14 +4,14 @@ using Library.Models;
 
 namespace Library.Controllers
 {
-    public class AuthorsController : Controller
+  public class AuthorsController : Controller
+  {
+    [HttpGet("/authors")]
+    public ActionResult Index()
     {
-      [HttpGet("/authors")]
-      public ActionResult Index()
-      {
-        List<Author> allAuthors = Author.GetAll();
-        return View(allAuthors);
-      }
+      List<Author> allAuthors = Author.GetAll();
+      return View(allAuthors);
+    }
 
     [HttpGet("/authors/new")]
     public ActionResult CreateForm()
@@ -27,6 +27,18 @@ namespace Library.Controllers
       return RedirectToAction("Index");
     }
 
+    [HttpGet("/authors/{id}")]
+    public ActionResult Details(int id)
+    {
+      Dictionary<string, object> model = new Dictionary<string, object>();
+      Author selectedAuthor = Author.Find(id);
+      List<Book> listBooks = selectedAuthor.GetBooks();
+      model.Add("selectedAuthor", selectedAuthor);
+      model.Add("listBooks", listBooks);
+      return View(model);
 
     }
+
+
+  }
 }

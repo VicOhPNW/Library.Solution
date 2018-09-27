@@ -102,5 +102,69 @@ namespace Library.Models
       return newAuthor;
       }
 
+      public void AddBook(Book newBook)
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"INSERT INTO books_authors (book_id, author_id) VALUES (@BookId, @AuthorId);";
+
+      MySqlParameter author_id = new MySqlParameter();
+      author_id.ParameterName = "@AuthorId";
+      author_id.Value = _id;
+      cmd.Parameters.Add(author_id);
+
+      MySqlParameter book_id = new MySqlParameter();
+      book_id.ParameterName = "@BookId";
+      book_id.Value = newBook.GetId();
+      cmd.Parameters.Add(book_id);
+
+      cmd.ExecuteNonQuery();
+      conn.Close();
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
+    }
+
+        public List<Book> GetBooks()
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"SELECT books.* FROM authors
+      JOIN books_authors ON (authors.id = books_authors.author_id)
+      JOIN books ON (books_authors.book_id = books.id)
+      WHERE authors.id = @AuthorId;";
+
+      MySqlParameter authorIdParameter = new MySqlParameter();
+      authorIdParameter.ParameterName = "@AuthorId";
+      authorIdParameter.Value = _id;
+      cmd.Parameters.Add(authorIdParameter);
+
+      MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+      List<Book> books = new List<Book>{};
+
+      while(rdr.Read())
+      {
+        int bookId = rdr.GetInt32(0);
+        string bookTitle = rdr.GetString(1);
+        string bookAuthor = rdr.GetString(2);
+        int bookCopies = rdr.GetInt32(3);
+        string bookDescription = rdr.GetString(4);
+
+        Book newBook = new Book(bookTitle, bookAuthor, bookCopies, bookDescription, bookId);
+        books.Add(newBook);
+      }
+      conn.Close();
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
+      return books;
+    }
+
+
+
   }
 }

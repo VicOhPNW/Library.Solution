@@ -6,7 +6,10 @@
 <div class = "container">
 <h1>Selected Book: </h1>
 <h2>Title: @Model["selectedBook"].GetTitle()</h2>
-<h2>Author name: @Model["selectedBook"].GetAuthors()</h2>
+<h2>Author: @Model["selectedBook"].GetAuthor()</h2>
+<h2>Copies: @Model["selectedBook"].GetCopies()</h2>
+<h2>Genre: @Model["selectedBook"].GetDescription()</h2>
+
 
 <hr />
 @if (@Model["authorBooks"].Count != 0)
@@ -31,4 +34,8 @@
   <button type='submit' class = 'btn btn-danger' >Add author</button>
 </form>
 <a href = "/" class="btn btn-danger">Home</a>
+<a href = "/books/@Model["selectedBook"].GetId()/update" class="btn btn-danger">Update</a>
+
+<a href = "/books/@Model["selectedBook"].GetId()/delete" class="btn btn-danger">Delete</a>
+
 </div>
